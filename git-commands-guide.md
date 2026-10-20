@@ -17,9 +17,13 @@
 | `git log -1 --format='%h %ad %s' --date=iso -- <文件>` | 查指定文件最近一次相关提交：短提交号、提交时间、标题。`-1` 只取最近一条。 |
 | `git -C bbApp log -12 --date=format:'%Y-%m-%d %H:%M:%S %z' --format='%h | %ad | %an | %s' -- Makefile` | 查子仓库中 `Makefile` 最近 12 条提交，按指定格式展示提交号、日期、作者、标题。 |
 | `git -C bbApp log --oneline -8 -- Makefile` | 简要列出该文件最近 8 条提交；`--oneline` 一条提交占一行。 |
+| `git log --all --author='liuzhixiang' --since='2026-10-09 00:00:00 +0800' --until='2026-10-16 23:59:59 +0800' --format='%h %ad %s' --date=short` | 按作者和时间区间查询提交；`--all` 纳入本地可见的所有分支和标签，`--author` 按作者标识匹配，`--since`/`--until` 指定时间上下限，`--format` 定制输出。它只查当前仓库，子模块需分别查询；`--all` 也不能保证包含尚未从远端取得的提交。 |
 | `git -C bbApp log -1 --format='%H%n%P%n%s'` | 查看完整提交号、父提交号和标题；`%n` 是换行。 |
 | `git -C bbApp rev-parse --short HEAD` | 取当前提交 `HEAD` 的短哈希值。 |
 | `git -C bbApp branch -r --contains HEAD` | 查看当前提交被哪些**本地已知的远程跟踪分支**包含；结果为空不能单独证明远端服务器绝对没有该提交，可能需要先更新远程跟踪信息。 |
+| `git log --all --since='2026-10-09 00:00:00 +0800'` | 查看当前仓库本地所有可见引用中的最近提交；`--all` 可能包含 stash 引用，统计正式提交时要剔除 stash 伪提交。子模块是独立仓库，需分别查询。 |
+| `git show --stat --first-parent <合并提交>` | 沿合并提交的第一父提交观察这次合并带来的文件变化；它不代表新增内容均由合并者原创。 |
+| `git stash list`、`git stash show` | 查看当前仓库临时保存的改动列表和某项的内容摘要；stash 不等于正式功能提交，子模块的 stash 也只存在于该子模块。 |
 | `git -C bbApp remote -v` | 查看远程仓库名称及 fetch/push 地址；不要在分享输出时泄露含凭据的地址。 |
 | `git ls-files <路径>` | 列出 Git 跟踪的文件；结合 `wc -l` 可统计数量。 |
 
