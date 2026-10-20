@@ -45,6 +45,9 @@
 | `git -C bbApp show --format= --name-status HEAD` | 查看当前提交涉及的文件及状态，如 `M` 修改、`A` 新增、`D` 删除。 |
 | `git -C bbApp -c core.whitespace=cr-at-eol diff --check` | 检查差异中新增行的空白问题。`-c` 仅本次临时设置 Git 参数；`cr-at-eol` 将旧式 `CRLF` 行尾的回车视为正常，避免误报。 |
 | `git -C bbApp diff --cached --name-status` | 列出暂存区中拟提交文件的增删改状态。 |
+| `git -C bbApp diff --cached --stat` | 只查看子仓库**暂存区**的文件与增删行数，用于提交前核对范围；不会显示未暂存或未跟踪文件的内容。 |
+| `git -C bbApp diff --cached --check` | 检查子仓库**暂存区**新增行的空白错误；不会修改文件，也不检查未暂存内容。若涉及旧式 CRLF 行尾，需按文件实际编码判断报告。 |
+| `git -C bbApp diff --check` | 检查子仓库**未暂存**差异的空白错误；与 `--cached --check` 检查的范围不同，两者都不会修改文件。 |
 
 ## 暂存和提交（会改变 Git 状态）
 
@@ -52,6 +55,8 @@
 | --- | --- |
 | `git -C bbApp add -- src_MultiCenter/BbClient808.cpp src_MultiCenter/BbClient808B.cpp tests/test_zero_distance_report.py` | **暂存**这几个明确列出的文件，准备提交；不等于已提交。提交前应运行 `git diff --cached --stat` 检查暂存范围。此前曾误将测试文件暂存并提交，随后按要求修正。 |
 | `git -C bbApp commit -m '标题' -m '正文' -m 'Co-Authored-By: ...'` | 把**暂存区**内容制成一个新提交；每个 `-m` 是一段消息。不会自动包含其他未暂存、未跟踪文件，也不会自动推送到远端。 |
+
+本次先用 `git -C bbApp add -- src_MultiCenter/BbTlsClient.cpp tests/test_tls_cert_validity.py tests/test_tls_diagnostics.py tests/test_tls_keylog.py` 精确暂存四个文件，避免把子模块中其他潜在改动带入提交；`--` 后的路径相对于 `bbApp` 子仓库。提交完成后，主仓库仍只显示 `bbApp` 子模块指针修改；**本次未提交主仓库指针，也未推送**。
 | `git -C bbApp rm --cached -- tests/test_zero_distance_report.py` | 只把文件从 Git **索引/暂存区**移除，保留磁盘上的文件。如果文件已在旧提交中，下一次提交会记录“删除该文件”；配合 `commit --amend` 可使本地最新提交不再包含它。不要误用没有 `--cached` 的 `git rm`，那会删除工作区文件。 |
 | `git -C bbApp commit --amend --no-edit` | 用当前暂存内容替换最近一次提交，同时沿用原提交消息；会生成**新的提交号**。只适合确认没有被别人依赖的本地提交；若已经推送，不能擅自改写公共历史。 |
 | `git -C bbApp commit --amend -m '标题' -m '正文' ...` | 修改最近一次提交内容或消息，也会改变提交号。本次用它修正错误的提交说明。 |
