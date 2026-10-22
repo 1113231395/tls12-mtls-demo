@@ -19,6 +19,7 @@ gitGraph
     commit id: "D"
     commit id: "E"
 ```
+<img width="692" height="168" alt="image" src="https://github.com/user-attachments/assets/5f3c2ade-8baf-4115-859b-c084f50eb89c" />
 
 `D -> E` 与 `F -> G` 是从 `C` 分出的两条提交链。两条链之间没有统一的先后顺序；Git 保存的是提交之间的父子关系，而不是单个线性列表。
 
@@ -48,6 +49,7 @@ gitGraph
     checkout feature
     merge main id: "N"
 ```
+<img width="849" height="176" alt="image" src="https://github.com/user-attachments/assets/e37dd43e-f096-4b65-88d1-a485338f9581" />
 
 `M` 的两个父提交是 `G` 和 `E`；`N` 的两个父提交是 `L` 和 `I`。此时 `main` 指向 `I`，`feature` 指向 `N`。主干上的 `D、E、H、I` 已成为 `feature` 的祖先提交，但主干指针还没有移动。
 
@@ -72,6 +74,7 @@ flowchart LR
     A((A)) --> B((B)) --> C((C)) --> D((D)) --> E((E))
     E --> H((H)) --> I((I)) --> F2(("F''")) --> G2(("G''")) --> K2(("K'")) --> L2(("L' · feature"))
 ```
+<img width="969" height="132" alt="image" src="https://github.com/user-attachments/assets/928cfd8a-b2bf-4da0-9e9a-aea54cf2f20f" />
 
 此时 `main` 仍指向 `I`。将 `feature` 快进合入主干后，`main` 也指向 `L'`。最终历史是一条直线，没有 `M、N`。撇号表示新提交的 ID：即使代码改动看起来一样，rebase 后的父提交变了，提交 ID 也会变。
 
